@@ -58,10 +58,12 @@ router.post('/login', async(req,res)=>{
 router.post('/getuser',async (req, res) => {
 
   try {
-    const userId = req.header('id');
+   const userId = req.header('id');
     console.log(userId)
+    let existing_user = await Profile.findOne({ user: userId });
     const user = await Credentials.findById(userId).select("-password")
-    res.send(JSON.stringify(user))
+    const user_info = [user,existing_user]
+    res.send(JSON.stringify(user_info))
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");
